@@ -26,8 +26,8 @@ dotnet add package Yamgooo.SRI.Sign
 
 ### Manual Installation
 ```bash
-git clone https://github.com/yourusername/sri-sign-service.git
-cd sri-sign-service
+git clone https://github.com/yamgooo/Sri.Sign.git
+cd Sri.Sign
 dotnet build
 ```
 
