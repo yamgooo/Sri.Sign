@@ -23,7 +23,6 @@ using System.Diagnostics;
 public class SriSignService : ISriSignService
 {
     private readonly ILogger<SriSignService> _logger;
-    private readonly IOptions<SriSignConfiguration>? _configuration;
     private string? _defaultCertificatePath;
     private string? _defaultCertificatePassword;
 
@@ -45,9 +44,9 @@ public class SriSignService : ISriSignService
     public SriSignService(ILogger<SriSignService> logger, IOptions<SriSignConfiguration> configuration)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        var signConfiguration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         
-        var config = _configuration.Value;
+        var config = signConfiguration.Value;
         _defaultCertificatePath = config.CertificatePath;
         _defaultCertificatePassword = config.CertificatePassword;
         

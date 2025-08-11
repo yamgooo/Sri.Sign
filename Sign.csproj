@@ -8,13 +8,14 @@
         
         <!-- NuGet Package Metadata -->
         <PackageId>Yamgooo.SRI.Sign</PackageId>
-        <Version>1.0.0</Version>
+        <Version>1.0.1</Version>
         <Authors>Erik Portilla</Authors>
         <Company>Yamgooo</Company>
         <Description>Biblioteca profesional .NET para operaciones de firma digital usando firmas XAdES, específicamente diseñada para facturación electrónica SRI (Servicio de Rentas Internas) en Ecuador.</Description>
         <Copyright>Copyright © 2025 Erik Portilla</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIcon>icon.png</PackageIcon>
         <PackageTags>sri ecuador firma digital xades xml signature</PackageTags>
         <PackageProjectUrl>https://github.com/yamgooo/Sri.Sign</PackageProjectUrl>
         <RepositoryUrl>https://github.com/yamgooo/Sri.Sign</RepositoryUrl>
@@ -36,6 +37,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Include="icon.png" Pack="true" PackagePath="/" Condition="Exists('icon.png')" />
         <None Include="README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 

@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![NuGet](https://img.shields.io/badge/nuget-v1.0.0-blue.svg)](https://www.nuget.org/packages/Yamgooo.SRI.Sign)
 
-Una biblioteca profesional de .NET para operaciones de firma digital usando firmas XAdES, específicamente diseñada para facturación electrónica del SRI (Servicio de Rentas Internas) en Ecuador.
+Una biblioteca de .NET para operaciones de firma digital usando firmas XAdES, específicamente diseñada para facturación electrónica del SRI (Servicio de Rentas Internas) en Ecuador.
 
 También disponible en inglés: [README.md](README.md)
 
