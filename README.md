@@ -6,6 +6,8 @@
 
 A professional .NET library for digital signature operations using XAdES signatures, specifically designed for SRI (Servicio de Rentas Internas) electronic invoicing in Ecuador.
 
+Also available in Spanish: [README_es.md](README_es.md)
+
 ## 🚀 Features
 
 - **XAdES Digital Signatures**: Full support for XML Advanced Electronic Signatures

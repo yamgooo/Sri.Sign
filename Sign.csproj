@@ -5,6 +5,27 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>Yamgooo.SRI.Sign</RootNamespace>
+        
+        <!-- NuGet Package Metadata -->
+        <PackageId>Yamgooo.SRI.Sign</PackageId>
+        <Version>1.0.0</Version>
+        <Authors>Erik Portilla</Authors>
+        <Company>Yamgooo</Company>
+        <Description>Biblioteca profesional .NET para operaciones de firma digital usando firmas XAdES, específicamente diseñada para facturación electrónica SRI (Servicio de Rentas Internas) en Ecuador.</Description>
+        <Copyright>Copyright © 2025 Erik Portilla</Copyright>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>sri ecuador firma digital xades xml signature</PackageTags>
+        <PackageProjectUrl>https://github.com/yamgooo/Sri.Sign</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/yamgooo/Sri.Sign</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <Deterministic>true</Deterministic>
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,6 +33,10 @@
       <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
       <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
 </Project>

@@ -111,36 +111,25 @@ public class SriSignService : ISriSignService
         {
             _logger.LogInformation("Starting digital signature for access key: {AccessKey}", accessKey);
 
-            // Validate XML content
             if (!IsValidXml(xmlContent))
-            {
                 return SignatureResult.CreateFailure("Invalid XML content", accessKey);
-            }
 
-            // Validate certificate file
             if (!File.Exists(certificatePath))
             {
                 _logger.LogError("Certificate not found at: {CertificatePath}", certificatePath);
                 return SignatureResult.CreateFailure($"Certificate not found at: {certificatePath}", accessKey);
             }
 
-            // Load certificate
             var certificate = await LoadCertificateAsync(certificatePath, password);
             if (certificate == null)
-            {
                 return SignatureResult.CreateFailure("Failed to load certificate", accessKey);
-            }
 
-            // Create XML document
             var xmlDoc = CreateXmlDocument(xmlContent);
             if (xmlDoc == null)
-            {
                 return SignatureResult.CreateFailure("Failed to create XML document", accessKey);
-            }
 
             _logger.LogInformation("Signing XML document");
 
-            // Sign document using FirmaXadesNet
             var signedXmlDoc = await Task.Run(() => SignXmlDocument(xmlDoc, certificate));
 
             stopwatch.Stop();
@@ -149,7 +138,6 @@ public class SriSignService : ISriSignService
             _logger.LogInformation("XML signed successfully for access key: {AccessKey} in {ElapsedMs}ms", 
                 accessKey, stopwatch.ElapsedMilliseconds);
 
-            // Validate the generated signature
             if (!ValidateSignature(result.SignedXml))
             {
                 _logger.LogWarning("Generated signature does not pass validation");
@@ -188,7 +176,6 @@ public class SriSignService : ISriSignService
 
             var xmlDoc = XDocument.Parse(signedXml);
             
-            // Find XADES signature elements
             var signatureElements = xmlDoc.Descendants()
                 .Where(e => e.Name.LocalName.Contains("Signature") || 
                            e.Name.LocalName.Contains("SignedInfo") ||
@@ -201,7 +188,6 @@ public class SriSignService : ISriSignService
                 return false;
             }
 
-            // Verify that at least one SignatureValue element exists and is not empty
             var signatureValue = xmlDoc.Descendants()
                 .FirstOrDefault(e => e.Name.LocalName == "SignatureValue");
 
