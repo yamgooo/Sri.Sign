@@ -16,19 +16,17 @@ public interface ISriSignService
     /// Signs XML content asynchronously using the default certificate configuration.
     /// </summary>
     /// <param name="xmlContent">The XML content to sign.</param>
-    /// <param name="accessKey">The access key for the document.</param>
     /// <returns>The signature result.</returns>
-    Task<SignatureResult> SignAsync(string xmlContent, string accessKey);
+    Task<SignatureResult> SignAsync(string xmlContent);
 
     /// <summary>
     /// Signs XML content asynchronously with specific certificate.
     /// </summary>
     /// <param name="xmlContent">The XML content to sign.</param>
-    /// <param name="accessKey">The access key for the document.</param>
     /// <param name="certificatePath">The path to the certificate file.</param>
     /// <param name="password">The password for the certificate.</param>
     /// <returns>The signature result.</returns>
-    Task<SignatureResult> SignAsync(string xmlContent, string accessKey, string certificatePath, string password);
+    Task<SignatureResult> SignAsync(string xmlContent, string certificatePath, string password);
 
     /// <summary>
     /// Validates a signed XML document.

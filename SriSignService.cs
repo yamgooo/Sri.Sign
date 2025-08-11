@@ -72,35 +72,30 @@ public class SriSignService : ISriSignService
     /// Signs XML content asynchronously using the default certificate configuration.
     /// </summary>
     /// <param name="xmlContent">The XML content to sign.</param>
-    /// <param name="accessKey">The access key for the document.</param>
     /// <returns>The signature result.</returns>
-    public async Task<SignatureResult> SignAsync(string xmlContent, string accessKey)
+    public async Task<SignatureResult> SignAsync(string xmlContent)
     {
         ArgumentException.ThrowIfNullOrEmpty(xmlContent);
-        ArgumentException.ThrowIfNullOrEmpty(accessKey);
 
         if (string.IsNullOrEmpty(_defaultCertificatePath) || string.IsNullOrEmpty(_defaultCertificatePassword))
         {
             return SignatureResult.CreateFailure(
-                "Default certificate not configured. Use SetDefaultCertificate() or the overload with certificate parameters.",
-                accessKey);
+                "Default certificate not configured. Use SetDefaultCertificate() or the overload with certificate parameters.");
         }
 
-        return await SignAsync(xmlContent, accessKey, _defaultCertificatePath, _defaultCertificatePassword);
+        return await SignAsync(xmlContent, _defaultCertificatePath, _defaultCertificatePassword);
     }
 
     /// <summary>
     /// Signs XML content asynchronously with specific certificate.
     /// </summary>
     /// <param name="xmlContent">The XML content to sign.</param>
-    /// <param name="accessKey">The access key for the document.</param>
     /// <param name="certificatePath">The path to the certificate file.</param>
     /// <param name="password">The password for the certificate.</param>
     /// <returns>The signature result.</returns>
-    public async Task<SignatureResult> SignAsync(string xmlContent, string accessKey, string certificatePath, string password)
+    public async Task<SignatureResult> SignAsync(string xmlContent, string certificatePath, string password)
     {
         ArgumentException.ThrowIfNullOrEmpty(xmlContent);
-        ArgumentException.ThrowIfNullOrEmpty(accessKey);
         ArgumentException.ThrowIfNullOrEmpty(certificatePath);
         ArgumentException.ThrowIfNullOrEmpty(password);
 
@@ -108,39 +103,38 @@ public class SriSignService : ISriSignService
         
         try
         {
-            _logger.LogInformation("Starting digital signature for access key: {AccessKey}", accessKey);
+            _logger.LogInformation("Starting digital signature");
 
             if (!IsValidXml(xmlContent))
-                return SignatureResult.CreateFailure("Invalid XML content", accessKey);
+                return SignatureResult.CreateFailure("Invalid XML content");
 
             if (!File.Exists(certificatePath))
             {
                 _logger.LogError("Certificate not found at: {CertificatePath}", certificatePath);
-                return SignatureResult.CreateFailure($"Certificate not found at: {certificatePath}", accessKey);
+                return SignatureResult.CreateFailure($"Certificate not found at: {certificatePath}");
             }
 
             var certificate = await LoadCertificateAsync(certificatePath, password);
             if (certificate == null)
-                return SignatureResult.CreateFailure("Failed to load certificate", accessKey);
+                return SignatureResult.CreateFailure("Failed to load certificate");
 
             var xmlDoc = CreateXmlDocument(xmlContent);
             if (xmlDoc == null)
-                return SignatureResult.CreateFailure("Failed to create XML document", accessKey);
+                return SignatureResult.CreateFailure("Failed to create XML document");
 
             _logger.LogInformation("Signing XML document");
 
             var signedXmlDoc = await Task.Run(() => SignXmlDocument(xmlDoc, certificate));
 
             stopwatch.Stop();
-            var result = SignatureResult.CreateSuccess(signedXmlDoc.OuterXml, accessKey, stopwatch.ElapsedMilliseconds);
+            var result = SignatureResult.CreateSuccess(signedXmlDoc.OuterXml, stopwatch.ElapsedMilliseconds);
 
-            _logger.LogInformation("XML signed successfully for access key: {AccessKey} in {ElapsedMs}ms", 
-                accessKey, stopwatch.ElapsedMilliseconds);
+            _logger.LogInformation("XML signed successfully in {ElapsedMs}ms", stopwatch.ElapsedMilliseconds);
 
             if (!ValidateSignature(result.SignedXml))
             {
                 _logger.LogWarning("Generated signature does not pass validation");
-                return SignatureResult.CreateFailure("Generated signature is not valid", accessKey);
+                return SignatureResult.CreateFailure("Generated signature is not valid");
             }
 
             return result;
@@ -148,9 +142,9 @@ public class SriSignService : ISriSignService
         catch (Exception ex)
         {
             stopwatch.Stop();
-            _logger.LogError(ex, "Error in digital signature for access key {AccessKey}: {Message}", accessKey, ex.Message);
+            _logger.LogError(ex, "Error in digital signature: {Message}", ex.Message);
             
-            return SignatureResult.CreateFailure($"Error in digital signature: {ex.Message}", accessKey);
+            return SignatureResult.CreateFailure($"Error in digital signature: {ex.Message}");
         }
     }
 

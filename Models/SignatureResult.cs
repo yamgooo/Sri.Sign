@@ -26,11 +26,6 @@ public class SignatureResult
     public string ErrorMessage { get; set; } = string.Empty;
 
     /// <summary>
-    /// The access key used for the signature
-    /// </summary>
-    public string AccessKey { get; set; } = string.Empty;
-
-    /// <summary>
     /// Timestamp when the signature was created
     /// </summary>
     public DateTime SignatureTimestamp { get; set; } = DateTime.UtcNow;
@@ -43,13 +38,12 @@ public class SignatureResult
     /// <summary>
     /// Creates a successful signature result
     /// </summary>
-    public static SignatureResult CreateSuccess(string signedXml, string accessKey, long processingTimeMs = 0)
+    public static SignatureResult CreateSuccess(string signedXml, long processingTimeMs = 0)
     {
         return new SignatureResult
         {
             Success = true,
             SignedXml = signedXml,
-            AccessKey = accessKey,
             ProcessingTimeMs = processingTimeMs
         };
     }
@@ -57,13 +51,12 @@ public class SignatureResult
     /// <summary>
     /// Creates a failed signature result
     /// </summary>
-    public static SignatureResult CreateFailure(string errorMessage, string accessKey)
+    public static SignatureResult CreateFailure(string errorMessage)
     {
         return new SignatureResult
         {
             Success = false,
-            ErrorMessage = errorMessage,
-            AccessKey = accessKey
+            ErrorMessage = errorMessage
         };
     }
 }
