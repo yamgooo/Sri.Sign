@@ -50,7 +50,7 @@ var sriSignService = serviceProvider.GetRequiredService<ISriSignService>();
 sriSignService.SetDefaultCertificate("ruta/al/certificado.p12", "tu-contraseña");
 
 // Firmar contenido XML
-var result = await sriSignService.SignAsync(xmlContent, accessKey);
+var result = await sriSignService.SignAsync(xmlContent);
 
 if (result.Success)
 {
@@ -69,7 +69,6 @@ else
 // Firmar con certificado específico (sin configuración necesaria)
 var result = await sriSignService.SignAsync(
     xmlContent, 
-    accessKey, 
     "ruta/al/certificado.p12", 
     "tu-contraseña"
 );
@@ -94,7 +93,7 @@ services.AddSriSignService(configuration);
 
 // Usar el servicio
 var sriSignService = serviceProvider.GetRequiredService<ISriSignService>();
-var result = await sriSignService.SignAsync(xmlContent, accessKey);
+var result = await sriSignService.SignAsync(xmlContent);
 ```
 
 ### 4. Configuración Personalizada
@@ -117,10 +116,10 @@ services.AddSriSignService(config);
 
 ```csharp
 // Firmar con configuración de certificado por defecto
-Task<SignatureResult> SignAsync(string xmlContent, string accessKey);
+Task<SignatureResult> SignAsync(string xmlContent);
 
 // Firmar con certificado específico
-Task<SignatureResult> SignAsync(string xmlContent, string accessKey, string certificatePath, string password);
+Task<SignatureResult> SignAsync(string xmlContent, string certificatePath, string password);
 ```
 
 #### Validación
@@ -145,7 +144,7 @@ public class SignatureResult
     public bool Success { get; set; }
     public string SignedXml { get; set; }
     public string ErrorMessage { get; set; }
-    public string AccessKey { get; set; }
+
     public DateTime SignatureTimestamp { get; set; }
     public long ProcessingTimeMs { get; set; }
 }
@@ -194,16 +193,16 @@ public class InvoiceSigningService
         _logger = logger;
     }
 
-    public async Task<SignatureResult> SignInvoiceAsync(string invoiceXml, string accessKey)
+    public async Task<SignatureResult> SignInvoiceAsync(string invoiceXml)
     {
         try
         {
             // Firmar el XML de la factura
-            var result = await _sriSignService.SignAsync(invoiceXml, accessKey);
+            var result = await _sriSignService.SignAsync(invoiceXml);
             
             if (result.Success)
             {
-                _logger.LogInformation("Factura firmada exitosamente para clave de acceso: {AccessKey}", accessKey);
+                _logger.LogInformation("Factura firmada exitosamente");
                 
                 // Validar la firma
                 if (_sriSignService.ValidateSignature(result.SignedXml))
@@ -221,7 +220,7 @@ public class InvoiceSigningService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error al firmar factura");
-            return SignatureResult.CreateFailure(ex.Message, accessKey);
+            return SignatureResult.CreateFailure(ex.Message);
         }
     }
 }
@@ -234,14 +233,14 @@ public class MultiTenantSigningService
 {
     private readonly ISriSignService _sriSignService;
 
-    public async Task<SignatureResult> SignForTenantAsync(string xmlContent, string accessKey, string tenantId)
+    public async Task<SignatureResult> SignForTenantAsync(string xmlContent, string tenantId)
     {
         // Obtener certificado específico del inquilino
         var certificatePath = GetTenantCertificatePath(tenantId);
         var certificatePassword = GetTenantCertificatePassword(tenantId);
 
         // Firmar con certificado específico del inquilino
-        return await _sriSignService.SignAsync(xmlContent, accessKey, certificatePath, certificatePassword);
+        return await _sriSignService.SignAsync(xmlContent, certificatePath, certificatePassword);
     }
 }
 ```
@@ -267,12 +266,11 @@ public async Task SignAsync_WithValidXml_ReturnsSuccess()
     var service = new SriSignService(mockLogger.Object);
     
     var xmlContent = "<test>content</test>";
-    var accessKey = "test-access-key";
     var certificatePath = "test-cert.p12";
     var password = "test-password";
 
     // Act
-    var result = await service.SignAsync(xmlContent, accessKey, certificatePath, password);
+    var result = await service.SignAsync(xmlContent, certificatePath, password);
 
     // Assert
     Assert.IsNotNull(result);
